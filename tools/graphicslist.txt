@@ -7,8 +7,11 @@ C .byt GRAPHICS_BANK1|IS_GRAPHIC, <BGCommon,     >BGCommon
 R BG_GRASSY
 C .byt GRAPHICS_BANK1|IS_GRAPHIC, <BGGrassy,     >BGGrassy
 
-R SP_ENEMY
+R SP_WALKER
 C .byt GRAPHICS_BANK1|IS_GRAPHIC, <SPWalker,     >SPWalker
+
+R SP_SNOWMAN
+C .byt GRAPHICS_BANK1|IS_GRAPHIC, <SPSnowman,    >SPSnowman
 
 R PAL_GRASSY
 C .byt GRAPHICS_BANK1|IS_PALETTE, <PalGrassy,    >PalGrassy

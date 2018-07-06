@@ -13,7 +13,7 @@
 	},
 	"Header":	{
 		"Music":	"WORLD_1A",
-		"SpriteGFX":	["SP_ENEMY", "SP_ENEMY", "SP_ENEMY", "SP_ENEMY"],
+		"SpriteGFX":	["SP_WALKER", "SP_SNOWMAN", "SP_SNOWMAN", "SP_SNOWMAN"],
 		"GFXUpload":	["PAL_GRASSY", "PAL_ENEMY1", "BG_COMMON", "BG_GRASSY"],
 		"BGColor":	49
 	},

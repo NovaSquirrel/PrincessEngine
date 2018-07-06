@@ -9,6 +9,7 @@ BGCommon:   ChrFile "../chr/bgcommon.pb53",   1024, $0000
 BGGrassy:   ChrFile "../chr/bggrassy.pb53",   768,  $0500
 BGCutscene: ChrFile "../chr/bgcutscene.pb53", 512,  $0000
 SPWalker:   ChrFile "../chr/spwalker.pb53",   512,  $1800
+SPSnowman:  ChrFile "../chr/spsnowman.pb53",  512,  $1800
 TitleCHR:   ChrFile "../tools/title/title.pb53",    4096, $0000
 TitleNAM:   ChrFile "../tools/title/titlenam.pb53", 1024, $2000
 InventoryCHR: ChrFile "../chr/inventory.pb53", 512, $0000

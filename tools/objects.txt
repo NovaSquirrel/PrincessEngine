@@ -11,31 +11,37 @@ C .byt ObjFlag::SECONDARY
 C .raddr ObjectNone
 
 R GOOMBA
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET | ObjBehavior::WAIT_UNTIL_NEAR
 C .byt ObjFlag::PRIMARY
 C .raddr ObjectGoomba
 
+R WAFFLE
+C .byt GraphicsUpload::SP_WALKER
+C .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET | ObjBehavior::WAIT_UNTIL_NEAR
+C .byt ObjFlag::PRIMARY
+C .raddr ObjectWaffle
+
 R SNEAKER
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET
 C .byt ObjFlag::PRIMARY
 C .raddr ObjectSneaker
 
 R OWL
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET
 C .byt ObjFlag::PRIMARY
 C .raddr ObjectOwl
 
 R CANNON_1
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt ObjBehavior::AUTO_REMOVE
 C .byt ObjFlag::PRIMARY
 C .raddr ObjectCannon1
 
 R CANNON_2
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt ObjBehavior::AUTO_REMOVE
 C .byt ObjFlag::PRIMARY
 C .raddr ObjectCannon2
@@ -53,13 +59,13 @@ C .byt ObjFlag::ESSENTIAL
 C .raddr ObjectPlayerProjectile
 
 R FIREBALL
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt 0
 C .byt ObjFlag::SECONDARY
 C .raddr ObjectFireball
 
 R FLAMES
-C .byt GraphicsUpload::SP_ENEMY
+C .byt GraphicsUpload::SP_WALKER
 C .byt 0
 C .byt ObjFlag::SECONDARY
 C .raddr ObjectFlames

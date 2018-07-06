@@ -2,10 +2,10 @@ emptylevel:
   .byt MusicTracks::NONE|0
   .byt 3
   .byt $fb
-  .byt GraphicsUpload::SP_ENEMY
-  .byt GraphicsUpload::SP_ENEMY
-  .byt GraphicsUpload::SP_ENEMY
-  .byt GraphicsUpload::SP_ENEMY
+  .byt GraphicsUpload::SP_WALKER
+  .byt GraphicsUpload::SP_WALKER
+  .byt GraphicsUpload::SP_WALKER
+  .byt GraphicsUpload::SP_WALKER
   .addr emptylevelData
   .addr emptylevelSprite
   .byt $31 ; background
@@ -18,7 +18,6 @@ emptylevel:
 
 emptylevelData:
   LObjN LO::RECT_1,           0, 13, 1, LN1::GROUND, 19
-  .byt LSpecialCmd, LevelSpecialConfig::IS_SANDBOX
   LFinished
 
 emptylevelSprite:

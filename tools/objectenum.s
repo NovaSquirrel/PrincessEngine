@@ -1,6 +1,7 @@
 .enum Enemy
   NONE
   GOOMBA
+  WAFFLE
   SNEAKER
   OWL
   CANNON_1

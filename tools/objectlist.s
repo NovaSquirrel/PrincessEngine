@@ -1,14 +1,15 @@
 .proc ObjGraphics
   .byt 0 ;NONE
-  .byt GraphicsUpload::SP_ENEMY ;GOOMBA
-  .byt GraphicsUpload::SP_ENEMY ;SNEAKER
-  .byt GraphicsUpload::SP_ENEMY ;OWL
-  .byt GraphicsUpload::SP_ENEMY ;CANNON_1
-  .byt GraphicsUpload::SP_ENEMY ;CANNON_2
+  .byt GraphicsUpload::SP_WALKER ;GOOMBA
+  .byt GraphicsUpload::SP_WALKER ;WAFFLE
+  .byt GraphicsUpload::SP_WALKER ;SNEAKER
+  .byt GraphicsUpload::SP_WALKER ;OWL
+  .byt GraphicsUpload::SP_WALKER ;CANNON_1
+  .byt GraphicsUpload::SP_WALKER ;CANNON_2
   .byt 0 ;POOF
   .byt 0 ;PLAYER_PROJECTILE
-  .byt GraphicsUpload::SP_ENEMY ;FIREBALL
-  .byt GraphicsUpload::SP_ENEMY ;FLAMES
+  .byt GraphicsUpload::SP_WALKER ;FIREBALL
+  .byt GraphicsUpload::SP_WALKER ;FLAMES
   .byt 0 ;MOVING_PLATFORM_HORIZ
   .byt 0 ;MOVING_PLATFORM_LINE
   .byt 0 ;CHECKPOINT
@@ -20,6 +21,7 @@
 .proc ObjBehaviors
   .byt 0 ;NONE
   .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET | ObjBehavior::WAIT_UNTIL_NEAR ;GOOMBA
+  .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET | ObjBehavior::WAIT_UNTIL_NEAR ;WAFFLE
   .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET ;SNEAKER
   .byt ObjBehavior::AUTO_REMOVE | ObjBehavior::GET_SHOT | ObjBehavior::AUTO_RESET ;OWL
   .byt ObjBehavior::AUTO_REMOVE ;CANNON_1
@@ -39,6 +41,7 @@
 .proc ObjFlags
   .byt ObjFlag::SECONDARY ;NONE
   .byt ObjFlag::PRIMARY ;GOOMBA
+  .byt ObjFlag::PRIMARY ;WAFFLE
   .byt ObjFlag::PRIMARY ;SNEAKER
   .byt ObjFlag::PRIMARY ;OWL
   .byt ObjFlag::PRIMARY ;CANNON_1
@@ -58,6 +61,7 @@
 .proc ObjectTable
   .raddr ObjectNone ;NONE
   .raddr ObjectGoomba ;GOOMBA
+  .raddr ObjectWaffle ;WAFFLE
   .raddr ObjectSneaker ;SNEAKER
   .raddr ObjectOwl ;OWL
   .raddr ObjectCannon1 ;CANNON_1

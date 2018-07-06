@@ -1,7 +1,8 @@
 .proc GraphicsList
   .byt GRAPHICS_BANK1|IS_GRAPHIC, <BGCommon,     >BGCommon ;BG_COMMON
   .byt GRAPHICS_BANK1|IS_GRAPHIC, <BGGrassy,     >BGGrassy ;BG_GRASSY
-  .byt GRAPHICS_BANK1|IS_GRAPHIC, <SPWalker,     >SPWalker ;SP_ENEMY
+  .byt GRAPHICS_BANK1|IS_GRAPHIC, <SPWalker,     >SPWalker ;SP_WALKER
+  .byt GRAPHICS_BANK1|IS_GRAPHIC, <SPSnowman,    >SPSnowman ;SP_SNOWMAN
   .byt GRAPHICS_BANK1|IS_PALETTE, <PalGrassy,    >PalGrassy ;PAL_GRASSY
   .byt GRAPHICS_BANK1|IS_GRAPHIC, <BGCutscene,   >BGCutscene ;BG_CUTSCENE
   .byt GRAPHICS_BANK1|IS_GRAPHIC, <TitleCHR,     >TitleCHR ;TITLE_CHR

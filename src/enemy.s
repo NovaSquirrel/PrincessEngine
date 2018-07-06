@@ -256,6 +256,19 @@ ObjHi:
   jmp EnemyPlayerTouchHurt
 .endproc
 
+.proc ObjectWaffle
+  jsr EnemyFall
+  jsr EnemyBumpOnCeiling
+
+  lda #$10
+  jsr EnemyWalkOnPlatform
+Display:
+  lda #$08
+  ldy #OAM_COLOR_2
+  jsr DispEnemyWide
+  jmp EnemyPlayerTouchHurt
+.endproc
+
 .proc ObjectOwl
   jsr EnemyFall
   jsr EnemyBumpOnCeiling

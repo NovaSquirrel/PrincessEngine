@@ -2,10 +2,10 @@ sample:
   .byt MusicTracks::WORLD_1A|0
   .byt 3
   .byt $db
-  .byt GraphicsUpload::SP_ENEMY
-  .byt GraphicsUpload::SP_ENEMY
-  .byt GraphicsUpload::SP_ENEMY
-  .byt GraphicsUpload::SP_ENEMY
+  .byt GraphicsUpload::SP_WALKER
+  .byt GraphicsUpload::SP_SNOWMAN
+  .byt GraphicsUpload::SP_SNOWMAN
+  .byt GraphicsUpload::SP_SNOWMAN
   .addr sampleData
   .addr sampleSprite
   .byt $31 ; background
@@ -135,7 +135,7 @@ sampleData:
 
 sampleSprite:
   LSpr Enemy::GOOMBA,              1,  23,   4
-  LSpr Enemy::OWL,                 1,  42,   8
+  LSpr Enemy::WAFFLE,              1,  42,   8
   LSpr Enemy::COLLECTIBLE,         0,  61,   3
   LSpr Enemy::OWL,                 1,  70,   3
   LSpr Enemy::GOOMBA,              1,  82,   8
