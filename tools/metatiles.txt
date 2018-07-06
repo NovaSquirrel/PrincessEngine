@@ -391,7 +391,7 @@ C .byt $d3
 R INVENTORY_ITEM
 C .byt M_PAL_1
 C .byt M_COLLECTIBLE
-C .byt $14
+C .byt $24
 C .byt $25
 C .byt $26
 C .byt $27
@@ -399,10 +399,10 @@ C .byt $27
 R INVENTORY_ITEM_AUTO
 C .byt M_PAL_1
 C .byt M_COLLECTIBLE
-C .byt $14
-C .byt $2D
-C .byt $26
-C .byt $2F
+C .byt $28
+C .byt $25
+C .byt $2a
+C .byt $27
 
 R CHIP
 C .byt M_PAL_1

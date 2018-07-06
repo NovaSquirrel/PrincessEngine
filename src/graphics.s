@@ -9,17 +9,11 @@ BGCommon:   ChrFile "../chr/bgcommon.pb53",   1024, $0000
 BGGrassy:   ChrFile "../chr/bggrassy.pb53",   768,  $0500
 BGCutscene: ChrFile "../chr/bgcutscene.pb53", 512,  $0000
 SPWalker:   ChrFile "../chr/spwalker.pb53",   512,  $1800
-SPCannon:   ChrFile "../chr/spcannon.pb53",   512,  $1800
-SPFire:     ChrFile "../chr/spfire.pb53",     512,  $1800
-SPKing:     ChrFile "../chr/spking.pb53",     512,  $1800
-SPGeorge:   ChrFile "../chr/spgeorge.pb53",   512,  $1800
 TitleCHR:   ChrFile "../tools/title/title.pb53",    4096, $0000
 TitleNAM:   ChrFile "../tools/title/titlenam.pb53", 1024, $2000
 InventoryCHR: ChrFile "../chr/inventory.pb53", 512, $0000
 NPCCHR:     ChrFile "../chr/spnpc.pb53",      2048, $1000
 LevelSelCHR: ChrFile "../chr/levelselect.pb53",  1024,  $0000
-SPRonald:   ChrFile "../chr/spronald.pb53",   512,  $1800
-SPMines:    ChrFile "../chr/spmines.pb53",    512,  $1800
 CHRFont:    ChrFile "../chr/font.pb53",       1536, $0200
 
 PalGrassy:  .byt $03
