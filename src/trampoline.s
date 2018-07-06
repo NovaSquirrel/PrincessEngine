@@ -15,43 +15,6 @@
 ; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;
 
-.proc LoadShopItemIcons
-; Ability graphics are in the graphics bank
-  lda #GRAPHICS_BANK1
-  jsr _SetPRG
-; Calculate pointer to the ability icon
-  lda #$08
-  sta PPUADDR
-  lda #$00
-  sta PPUADDR
-
-  lda #<AbilityIcons
-  sta 0
-  lda #>AbilityIcons
-  sta 1
-
-; Copy 1 kilobyte to the PPU
-  ldx #4
-  ldy #0
-: lda (0),y
-  sta PPUDATA
-  iny
-  bne :-
-  inc 1
-  dex
-  bne :-
-; Decompress shop icons
-  lda #GRAPHICS_BANK2
-  jsr _SetPRG
-  lda #<BGShopIcons
-  ldy #>BGShopIcons
-  jsr DecompressCHR
-
-; Restore options bank
-  lda #OPTIONS_BANK
-  jmp _SetPRG
-.endproc
-
 ; Run inventory code from the main loop bank
 .proc FarInventoryCode
   stx TempX
@@ -166,13 +129,6 @@
   jsr _SetPRG
   jsr pently_init
 
-  lda #FAMITONE_BANK
-  jsr _SetPRG
-  lda #0
-  ldx #<Original_music_data
-  ldy #>Original_music_data
-  jsr FamiToneInit
-
   jmp SetPRG_Restore
 .endproc
 
@@ -188,42 +144,12 @@
 .endproc
 PlayMusicAuto = SoundTestStartPently
 
-.proc SoundTestStartFamitone
-  pha
-  lda #FAMITONE_BANK
-  jsr _SetPRG
-  pla
-  jsr FamiToneMusicPlay
-  jmp SetPRG_Restore
-.endproc
-
 .proc SoundTestUpdatePently
   lda #SOUND_BANK
   jsr _SetPRG
   jsr pently_update
   jmp SetPRG_Restore
 .endproc
-
-.proc SoundTestUpdateFamitone
-  lda #FAMITONE_BANK
-  jsr _SetPRG
-  jsr FamiToneUpdate
-  jmp SetPRG_Restore
-.endproc
-
-.if 0
-; Allows object bank 2 bank to change blocks
-; Unsure if needed?
-.proc ChangeBlockFarObject2
-  pha
-  lda #MAINLOOP_BANK
-  jsr _SetPRG
-  pla
-  jsr ChangeBlock
-  lda #OBJECT_BANK2
-  jmp _SetPRG
-.endproc
-.endif
 
 .proc DecompressTextFar
   pha
@@ -236,23 +162,6 @@ PlayMusicAuto = SoundTestStartPently
   jsr SetPRG_Restore
   pla
   rts
-.endproc
-
-.if 0
-.proc ShowPreLevelFar
-  lda #OPTIONS_BANK
-  jsr SetPRG
-  jmp ShowPreLevel
-.endproc
-.endif
-
-.proc LoadExpositionGraphics
-  lda #GraphicsUpload::CHR_FONT
-  jsr DoGraphicUpload
-  lda #GraphicsUpload::BG_EXPOSITION
-  jsr DoGraphicUpload
-  lda #DIALOG_BANK
-  jmp SetPRG
 .endproc
 
 .proc LoadDialogGraphic
@@ -278,61 +187,6 @@ PlayMusicAuto = SoundTestStartPently
 
 Call:
   jmp (0)
-.endproc
-
-.proc LaunchDABG
-  jsr WaitVblank
-  lda #0
-  sta PPUMASK
-
-  lda #GraphicsUpload::DABG_GAME_CHR
-  jsr DoGraphicUpload
-
-  lda #EXTRAS_BANK
-  jsr SetPRG
-
-  ; Set up pointers for the copy
-  lda #$60
-  sta 1
-  lda #$80
-  sta 3
-  lda #0
-  sta 0
-  sta 2
-  ; Do the copy
-  ldx #(DABG_WRAM_END - DABG_WRAM) / 256 + 1
-  ldy #0
-CopyLoop:
-  lda (2),y
-  sta (0),y
-  iny
-  bne CopyLoop
-  inc 1
-  inc 3
-  dex
-  bne CopyLoop
-
-  ; Also change the mirroring. DABG uses horizontal, Nova uses vertical
-  .ifdef MAPPER_MMC1
-    lda #%01111 ; horizontal mirroring, UNROM style
-    jsr SetControl
-  .endif
-  .ifdef MAPPER_MMC3
-    lda #1
-    sta $a000 ; vertical mirroring
-  .endif
-  .ifdef MAPPER_ACTION53
-    lda #$80 ; mapper mode
-    sta $5000
-    lda #%00111111 ; 256KB game, horizontal mirroring, UNROM-style switching
-    sta $8000
-  .endif
-
-  ; Launch the game!
-  lda #DABG_BANK
-  jsr SetPRG
-
-  jmp $8000
 .endproc
 
 .proc StartCredits

@@ -273,15 +273,6 @@ NoLinks:
 
 ; decompress background graphics
 ; and sprites
-  ; If in sandbox mode, load in the 
-  lda SandboxMode
-  beq :+
-    lda #SANDBOX_BANK
-    jsr SetPRG
-    jsr ApplySandboxGFXPicker
-    lda #LevelBank
-    jsr SetPRG
-  :
   jsr DoLevelUploadListAndSprites
 
   ; display a "now loading" or whatever
@@ -483,38 +474,6 @@ DoLevelUploadListAndSprites:
   bne :-
 :
 
-.ifdef NEW_TOGGLE_BEHAVIOR
-  ; If blocks are toggled, upload the toggled blocks
-  lda ToggleBlockEnabled
-  beq NoToggle
-  lda #GRAPHICS_BANK2
-  jsr _SetPRG
-  lda #>$0800
-  sta PPUADDR
-  lda #<$0800
-  sta PPUADDR
-  ldy #0
-
-  ; DABG themed levels use different tiles
-  ; because the palette would look pretty bad otherwise.
-  lda LevelUploadList+0
-  cmp #GraphicsUpload::BG_DABGCOMMON
-  bne :+
-    ldy #128
-  :
-
-: lda ToggleBlockGFX,y
-  sta PPUDATA
-  iny
-  cpy #255 ; exit for either 255 or 127
-  beq :+
-  cpy #127
-  bne :-
-:
-  jsr SetPRG_Restore
-NoToggle:
-.endif
-
   jmp FlushPaletteWrites
 .endproc
 
@@ -604,117 +563,7 @@ SpecialCommandTable:
 
 SpecialConfigTable:
   .raddr SpecialConfigEnablePuzzle
-  .raddr SpecialConfigMakeBackgrounds
   .raddr SpecialConfigStartDialog
-  .raddr MakeFrozenBackground
-  .raddr SetBGStars
-  .raddr SetAnimatedWater
-  .raddr SetJackStone
-  .raddr IsSandbox
-  .raddr ForceMirror
-  .raddr DoPreserveLevel
-
-SpecialConfigMakeBackgrounds:
-  lda (LevelDecodePointer),y
-  unpack 1, 0
-  lda 0
-  sec
-  adc 1
-  sta 1
-  ; 0 = starting page
-  ; 1 = ending page
-  iny
-  lda (LevelDecodePointer),y
-  asl
-  tax
-  jsr IncreasePointerBy2
-
-  ; Push the routine for the background type
-  lda BackgroundRoutines+1,x
-  pha
-  lda BackgroundRoutines+0,x
-  pha
-  rts
-
-BackgroundRoutines:
-  .raddr BGClouds
-  .raddr BGCloudsEverywhere
-  .raddr BGCloudsMany
-
-IsSandbox:
-  lda #MusicTracks::NONE
-  sta LevelMusic
-  lda SandboxMode
-  bne @_rts
-  inc SandboxMode
-  ldx #6
-: lda SandboxPresetBrushes,x
-  sta SandboxBrushes,x
-  dex
-  bpl :-
-@_rts:
-  rts
-SandboxPresetBrushes:
-  .byt Metatiles::GROUND_MIDDLE_M
-  .byt Metatiles::SOLID_LEDGE_M
-  .byt Metatiles::ROCK_MID_M
-  .byt Metatiles::BRICKS
-  .byt Metatiles::SPRING
-  .byt Metatiles::COIN
-  .byt Metatiles::SOLID_BLOCK
-
-SetJackStone:
-  inc BackgroundBoss
-
-  lda #255
-  sta BackgroundBossScrollX
-  lda #0
-  sta BackgroundBossScrollY
-  rts
-ForceMirror:
-  lda #AbilityType::MIRROR|128
-  sta NeedAbilityChange
-  sta NeedAbilityChangeNoSound
-  rts
-
-DoPreserveLevel:
-  inc PreserveLevel
-  rts
-
-SetBGStars:
-  lda #<StarryBackground
-  sta LevelRoutine+0
-  lda #>StarryBackground
-  sta LevelRoutine+1
-  rts
-SetAnimatedWater:
-  lda #<DoAnimatedWater
-  sta LevelRoutine+0
-  lda #>DoAnimatedWater
-  sta LevelRoutine+1
-  rts
-
-MakeFrozenBackground:
-  lda #Metatiles::FROZEN_BACKGROUND
-  sta BackgroundMetatile
-
-  lda #0
-  tay
-  sta 0
-  lda #$60
-  sta 1
-fill_loop:
-  lda (0),y
-  bne :+
-  lda #Metatiles::FROZEN_BACKGROUND
-  sta (0),y
-: iny
-  bne fill_loop
-  inc 1
-  lda 1
-  cmp #$70
-  bne fill_loop
-  rts
 
 SpecialConfigStartDialog:
   lda CutscenesEnabled
@@ -739,20 +588,6 @@ SkipDialog:
 SpecialConfigEnablePuzzle:
   lda #1
   sta PuzzleMode
-.if 0
-  ; todo: really save this?
-  lda PlayerAbility
-  sta PuzzleModeAbilityBackup
-
-  ; Write the current ability
-  lda (LevelDecodePointer),y ; keep the ability if the level decides to do so
-  cmp #AbilityType::LAST
-  beq :+
-  ora #128
-  sta NeedAbilityChange
-  inc NeedAbilityChangeNoSound
-:
-.endif
   ; Skip the ability byte
   jsr IncreasePointerBy1
 

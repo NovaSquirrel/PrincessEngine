@@ -88,7 +88,7 @@ C .byt $0a
 C .byt $0b
 
 R SOLID_BLOCK
-C .byt M_PAL_1
+C .byt M_PAL_2
 C .byt M_SOLID_ALL|M_SOLID_TOP
 C .byt $0c
 C .byt $0d
@@ -649,7 +649,7 @@ C .byt $61
 R GROUND_CLIMB_L
 C .byt M_PAL_0
 C .byt M_SOLID_ALL|M_SOLID_TOP
-C .byt $50
+C .byt $70
 C .byt $60
 C .byt $71
 C .byt $77
@@ -659,7 +659,7 @@ C .byt M_PAL_0
 C .byt M_SOLID_ALL|M_SOLID_TOP
 C .byt $71
 C .byt $77
-C .byt $51
+C .byt $72
 C .byt $61
 
 R ROCK_TOP_L

@@ -2,10 +2,10 @@ emptylevel:
   .byt MusicTracks::NONE|0
   .byt 3
   .byt $fb
-  .byt GraphicsUpload::SP_WALKER
-  .byt GraphicsUpload::SP_CANNON
-  .byt GraphicsUpload::SP_FIRE
-  .byt GraphicsUpload::SP_KING
+  .byt GraphicsUpload::SP_ENEMY
+  .byt GraphicsUpload::SP_ENEMY
+  .byt GraphicsUpload::SP_ENEMY
+  .byt GraphicsUpload::SP_ENEMY
   .addr emptylevelData
   .addr emptylevelSprite
   .byt $31 ; background
@@ -13,8 +13,6 @@ emptylevel:
   .byt GraphicsUpload::BG_COMMON
   .byt GraphicsUpload::BG_GRASSY
   .byt GraphicsUpload::PAL_ENEMY1
-  .byt GraphicsUpload::BG_TROPICAL
-  .byt GraphicsUpload::BG_GRASSYBG
   .byt 255 ; end
   .byt $00, $00 ; boundaries
 

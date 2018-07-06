@@ -215,14 +215,6 @@ LastOptionConst = 5
   PositionXY 0, 3, 20
   jsr PutStringImmediate
   .byt "Delete save",0
-  PositionXY 0, 3, 24
-  jsr PutStringImmediate
-  .scope
-  .byt .sprintf("Project day %d", (.TIME / 86400) - 16611),0
-  .endscope
-  PositionXY 0, 3, 26
-  jsr PutStringImmediate
-  .byt "http://novasquirrel.com",0
 
   ; Print current values for the options
   ldy LastOptionNum
@@ -522,9 +514,6 @@ NoLevelsCleared:
   PositionXY 0, 3, 14
   jsr PutStringImmediate
   .byt "Game options",0
-  PositionXY 0, 3, 16
-  jsr PutStringImmediate
-  .byt "Extra features",0
 
   ; This will make the colors change on the first loop iteration
   lda #255
@@ -552,8 +541,6 @@ Loop:
   jeq ShowControlsTrampoline
   dey
   jeq ShowOptions
-  dey
-  jeq ShowExtraFeatures
 NoA:
 
   ; Move the cursor
@@ -569,7 +556,7 @@ NoA:
   and #KEY_DOWN
   beq :+
     lda Cursor
-    cmp #3
+    cmp #2
     beq :+
     inc Cursor
   :
@@ -589,227 +576,4 @@ NoA:
   sta OAM_YPOS
 
   jmp Loop
-.endproc
-
-.proc ShowExtraFeatures
-Cursor = 13
-FeatureCount = TempVal
-
-  jsr SoundTestStopMusic
-  jsr OptionsScreenSetup
-
-  lda #0
-  sta Cursor
-
-  lda #1
-  sta FeatureCount
-
-  lda LevelCleared+4
-  bpl :+
-    inc FeatureCount
-  :
-  lda LevelCleared+0
-  and LevelCleared+1
-  and LevelCleared+2
-  and LevelCleared+3
-  and LevelCleared+4
-  and CollectibleBits+0
-  and CollectibleBits+1
-  and CollectibleBits+2
-  and CollectibleBits+3
-  and CollectibleBits+4
-  cmp #255
-  bne :+
-    inc FeatureCount
-    inc FeatureCount
-  :
-
-; Write the options
-  PositionXY 0, 11, 4
-  jsr PutStringImmediate
-  .byt "-Extras!-",0
-
-  lda FeatureCount
-  cmp #1
-  bne :+
-    PositionXY 0, 3, 20
-    jsr PutStringImmediate
-    .byt "Check back here if you",0
-    PositionXY 0, 3, 22
-    jsr PutStringImmediate
-    .byt "beat or 100% the game!",0
-  :
-
-  PositionXY 0, 3, 10
-  jsr PutStringImmediate
-  .byt "Back",0
-  PositionXY 0, 3, 12
-  jsr PutStringImmediate
-  .byt "Double Action Blaster Guys",0
-  lda FeatureCount
-  cmp #1
-  beq :+
-  PositionXY 0, 3, 14
-  jsr PutStringImmediate
-  .byt "Credits",0
-  lda FeatureCount
-  cmp #2
-  beq :+
-  PositionXY 0, 3, 16
-  jsr PutStringImmediate
-  .byt "Sound test",0
-  PositionXY 0, 3, 18
-  jsr PutStringImmediate
-  .byt "Early graphics",0
-:
-
-  ; This will make the colors change on the first loop iteration
-  lda #255
-  sta retraces
-
-Loop:
-  jsr WaitVblank
-  lda #OBJ_ON|BG_ON
-  sta PPUMASK
-
-  jsr OptionsScreenCommonLoop
-
-  lda keynew
-  and #KEY_B
-  beq :+
-    jmp ShowMainMenu
-  :
-
-  lda keynew
-  and #KEY_A
-  beq NoA
-  ldy Cursor
-  jeq ShowMainMenu
-  dey
-  jeq LaunchDABG
-  dey
-  jeq LaunchCredits
-  dey
-  jeq ShowSoundTest
-  dey
-  jeq ShowEarlyTiles
-NoA:
-
-  ; Move the cursor
-  lda keynew
-  and #KEY_UP
-  beq :+
-    lda Cursor
-    beq :+
-    dec Cursor
-  :
-
-  lda keynew
-  and #KEY_DOWN
-  beq :+
-    lda Cursor
-    cmp FeatureCount
-    beq :+
-    inc Cursor
-  :
-
-  lda #OAM_COLOR_0
-  sta OAM_ATTR
-  lda #$51
-  sta OAM_TILE
-  lda #2*8
-  sta OAM_XPOS
-  lda Cursor
-  asl
-  asl
-  asl
-  asl
-  add #10*8-1
-  sta OAM_YPOS
-
-  jmp Loop
-.endproc
-
-.proc LaunchCredits
-  lda #OPTIONS_BANK
-  jsr StartCredits
-  jmp ShowExtraFeatures
-.endproc
-
-.proc ShowEarlyTiles
-  jsr WaitVblank
-  lda #VBLANK_NMI | NT_2000 | OBJ_8X8 | BG_0000 | OBJ_1000
-  sta PPUCTRL
-  lda #0
-  sta PPUMASK
-
-  lda #' '
-  jsr ClearNameCustom
-
-  PositionXY 0, 8, 8
-  ldy #$80
-Draw:
-  sty PPUDATA
-  iny
-  tya
-  and #15
-  bne :+
-    lda #' '
-    jsr WritePPURepeated16
-  :
-  cpy #$00
-  bne Draw
-
-  ; Set attributes
-  lda #$23
-  sta PPUADDR
-  lda #$d2
-  sta PPUADDR
-  ldx #11
-: lda Attribute,x
-  sta PPUDATA
-  dex
-  bpl :-
-  ; ends at 23dd
-
-  PositionXY 0, 3, 18
-  jsr PutStringImmediate
-  .byt "These are the first tiles",0
-  PositionXY 0, 3, 20
-  jsr PutStringImmediate
-  .byt "that I ever drew for this",0
-  PositionXY 0, 3, 22
-  jsr PutStringImmediate
-  .byt "game. Press A to exit.",0
-
-; Upload graphics and palette
-  lda #$31
-  sta LevelBackgroundColor
-  lda #GraphicsUpload::CHR_EARLYTILES
-  jsr DoGraphicUpload
-  jsr WaitVblank
-  lda #GraphicsUpload::PAL_EARLYTILES
-  jsr DoGraphicUpload
-
-  jsr WaitVblank
-  lda #0
-  sta PPUSCROLL
-  sta PPUSCROLL
-  lda #VBLANK_NMI | NT_2000 | OBJ_8X8 | BG_0000 | OBJ_1000
-  sta PPUCTRL
-  lda #BG_ON
-  sta PPUMASK
-
-Loop:
-  jsr WaitForKey
-  lda keydown
-  and #KEY_A|KEY_B|KEY_START
-  beq Loop
-
-  jmp ShowExtraFeatures
-
-Attribute:
-  .byt %11011010, %01011000, %01010101, 0
-  .byt 0,0,0,0
-  .byt 255, %11001100, %01010000, %10100000
 .endproc

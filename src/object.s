@@ -98,8 +98,8 @@ Launch:
   lda ObjectF1,x
   and #%11111110
   beq Erase ; don't launch if the slot is empty
-  cmp #2*(Enemy::FINAL_PROJECTILE+1) ; erase out-of-range enemies
-  bcs Erase
+;  cmp #2*(Enemy::FINAL_PROJECTILE+1) ; erase out-of-range enemies
+;  bcs Erase
   tay ; push the address first
   lsr
   sta O_RAM::OBJ_TYPE
@@ -339,15 +339,6 @@ Bump:
   ora ObjectVYL,y
   beq Nothing
 
-  ; Don't change velocity on enemies that store other data in the velocity variables
-  ldy #EnemyBumpBlacklistSize-1
-  lda ObjectF1,x
-  and #<~1
-: cmp EnemyBumpBlacklist,y
-  beq BumpStunOnly
-  dey
-  bpl :-
-
   lda #>-1
   sta ObjectVYH,x
   lda #<-$30
@@ -438,40 +429,7 @@ Copy:
 @End:
   rts
 EnemyAbilityTable:
-  .byt Enemy::GEORGE,           AbilityType::WATER
-  .byt Enemy::BIG_GEORGE,       AbilityType::WATER
-  .byt Enemy::ICE_1,            AbilityType::NICE
-  .byt Enemy::ICE_2,            AbilityType::NICE
-  .byt Enemy::BURGER,           AbilityType::BURGER
-  .byt Enemy::FIRE_WALK,        AbilityType::FIRE
-  .byt Enemy::GRILLBERT,        AbilityType::FIRE
-  .byt Enemy::FIRE_JUMP,        AbilityType::FIRE
-  .byt Enemy::FLAMES,           AbilityType::FIRE
-  .byt Enemy::ROCKET,           AbilityType::BOMB
-  .byt Enemy::ROCKET_LAUNCHER,  AbilityType::BOMB
-  .byt Enemy::FIREWORK_SHOOTER, AbilityType::FIREWORK
-  .byt Enemy::ELECTRIC_FAN,     AbilityType::FAN
-  .byt Enemy::CLOUD,            AbilityType::FAN
-  .byt Enemy::BOUNCER,          AbilityType::BLASTER
-  .byt Enemy::GREMLIN,          AbilityType::BLASTER
-  .byt Enemy::TURKEY,           AbilityType::BLASTER
-  .byt Enemy::ROVER,            AbilityType::BLASTER
-  .byt Enemy::MAMA_LUIGI,       AbilityType::BLASTER
-  .byt Enemy::BOMB_GUY,         AbilityType::BOMB
-  .byt Enemy::DROPPED_BOMB_GUY, AbilityType::BOMB
-  .byt Enemy::BOMB_POP,         AbilityType::BOMB
-  .byt Enemy::RONALD,           AbilityType::BURGER
-  .byt Enemy::SUN,              AbilityType::FIRE
-  .byt Enemy::BIG_GLIDER,       AbilityType::GLIDER
-  .byt Enemy::BIG_LWSS,         AbilityType::GLIDER
-  .byt Enemy::BOOMERANG_GUY,    AbilityType::BOOMERANG
-  .byt Enemy::GRABBY_HAND,      AbilityType::BOOMERANG
   .byt 0
-EnemyBumpBlacklist:
-  .byt Enemy::GRABBY_HAND*2
-  .byt Enemy::FIREBAR*2
-  .byt Enemy::KING*2
-EnemyBumpBlacklistSize = 3
 .endproc
 
 ; Copies the position from object X to object Y
@@ -1786,5 +1744,104 @@ DontDraw:
   sta ObjectF3,x
   sta ObjectF4,x
   sta O_RAM::OBJ_TYPE ; fixes a bug where after changing to the poof, it still checks for projectiles
+  rts
+.endproc
+
+; Randomly swaps two object slots, because the NES can only display 8 sprites per scanline
+; and any past that aren't drawn. This way sprites are don't just drop out of visibility.
+.proc FlickerEnemies
+  lda retraces
+  and #15
+  tax
+  jsr huge_rand
+  and #15
+  tay
+
+  lda ObjectPXH,x
+  sta 0
+  lda ObjectPXL,x
+  sta 1
+  lda ObjectPYH,x
+  sta 2
+  lda ObjectPYL,x
+  sta 3
+  lda ObjectVXH,x
+  sta 4
+  lda ObjectVXL,x
+  sta 5
+  lda ObjectVYH,x
+  sta 6
+  lda ObjectVYL,x
+  sta 7
+  lda ObjectF1,x
+  sta 8
+  lda ObjectF2,x
+  sta 9
+  lda ObjectF3,x
+  sta 10
+  lda ObjectF4,x
+  sta 11
+  lda ObjectIndexInLevel,x
+  sta 12
+  lda ObjectTimer,x
+  sta 13
+
+  lda ObjectPXH,y
+  sta ObjectPXH,x
+  lda ObjectPXL,y
+  sta ObjectPXL,x
+  lda ObjectPYH,y
+  sta ObjectPYH,x
+  lda ObjectPYL,y
+  sta ObjectPYL,x
+  lda ObjectVXH,y
+  sta ObjectVXH,x
+  lda ObjectVXL,y
+  sta ObjectVXL,x
+  lda ObjectVYH,y
+  sta ObjectVYH,x
+  lda ObjectVYL,y
+  sta ObjectVYL,x
+  lda ObjectF1,y
+  sta ObjectF1,x
+  lda ObjectF2,y
+  sta ObjectF2,x
+  lda ObjectF3,y
+  sta ObjectF3,x
+  lda ObjectF4,y
+  sta ObjectF4,x
+  lda ObjectIndexInLevel,y
+  sta ObjectIndexInLevel,x
+  lda ObjectTimer,y
+  sta ObjectTimer,x
+
+  lda 0
+  sta ObjectPXH,y
+  lda 1
+  sta ObjectPXL,y
+  lda 2
+  sta ObjectPYH,y
+  lda 3
+  sta ObjectPYL,y
+  lda 4
+  sta ObjectVXH,y
+  lda 5
+  sta ObjectVXL,y
+  lda 6
+  sta ObjectVYH,y
+  lda 7
+  sta ObjectVYL,y
+  lda 8
+  sta ObjectF1,y
+  lda 9
+  sta ObjectF2,y
+  lda 10
+  sta ObjectF3,y
+  lda 11
+  sta ObjectF4,y
+  lda 12
+  sta ObjectIndexInLevel,y
+  lda 13
+  sta ObjectTimer,y
   rts
 .endproc

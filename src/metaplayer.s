@@ -462,19 +462,6 @@ HasSunKey:
   lsr CarryingSunKey ; no longer holding the key
   sty TempY
 
-  ; Erase the key being held
-  ldy #ObjectLen-1
-: lda ObjectF1,y
-  and #<~1
-  cmp #Enemy::SUN_KEY*2
-  bne :+ ; skip if not sun key
-  lda ObjectF4,y
-  beq :+ ; skip if not being held
-  lda #0
-  sta ObjectF1,y
-: dey
-  bpl :--
-
   ldy TempY  
   jmp UnlockNow
 .endproc
@@ -903,31 +890,6 @@ Failed:
 .endproc
 
 .proc TouchedWoodArrow
-SaveY = 10
-Offset = 11
-  sty SaveY
-  sub #Metatiles::WOOD_ARROW_LEFT
-  sta Offset
-
-  lda #Enemy::FLYING_ARROW*2
-  jsr FindFreeObjectForTypeX
-  bcc Exit
-  jsr GetBlockX
-  sta ObjectPXH,x
-  lda SaveY
-  sta ObjectPYH,x
-
-  pha
-  ; X and Y are preserved
-  lda BackgroundMetatile
-  jsr ChangeBlock
-  pla
-
-  ldy Offset
-  jsr ArrowChangeDirection
-Exit:
-
-  ldy SaveY
   lda #PoofSubtype::POOF
   jmp MakePoofAtBlock
 .endproc
