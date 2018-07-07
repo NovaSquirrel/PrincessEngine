@@ -44,7 +44,7 @@ WorldTimes8 = 15
     lda #4
   :
   add #MusicTracks::WORLD_1_SELECT
-  jsr SoundTestStartPently
+;  jsr SoundTestStartPently
 
 ; Initialize PPU stuff
   jsr WaitVblank

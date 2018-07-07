@@ -72,7 +72,8 @@ JUMP_GRACE_PERIOD_LENGTH = 6
 .include "../tools/graphicsenum.s"
 
 .enum SFX
-  JUMP = 128+26
+  ; Adjust JUMP to be the first sound effect after the drums
+  JUMP = 128+4
   ENEMY_SMOOSH
   HURT
   SPRING
