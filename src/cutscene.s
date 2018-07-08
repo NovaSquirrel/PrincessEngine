@@ -121,7 +121,7 @@ SkipTheScript:
   sta PPUCTRL
   jsr ClearName
   jsr DoLevelUploadList
-  jsr UploadNovaAndCommon
+  jsr UploadPlayerAndCommon
   inc NeedLevelRerender
   jsr UpdateScrollRegister
   jsr WaitVblank

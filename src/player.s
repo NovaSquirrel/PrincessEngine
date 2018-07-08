@@ -46,7 +46,7 @@ HealthCount = 1
   sta OAM_TILE+(4*1),y
   lda #$4f
   sta OAM_TILE+(4*3),y
-  lda #OAM_COLOR_0
+  lda #OAM_COLOR_1
   sta OAM_ATTR+(4*0),y
   sta OAM_ATTR+(4*1),y
   sta OAM_ATTR+(4*2),y
@@ -54,45 +54,6 @@ HealthCount = 1
   tya
   add #4*4
   tay
-
-; Draw the chip for a chip collecting level if needed
-  lda ChipsNeeded
-  beq :+
-  lda #$5f
-  sta OAM_TILE,y
-  lda #OAM_COLOR_1
-  sta OAM_ATTR+(4*0),y
-  sta OAM_ATTR+(4*1),y
-  sta OAM_ATTR+(4*2),y
-  lda #15
-  sta OAM_YPOS+(4*0),y
-  sta OAM_YPOS+(4*1),y
-  sta OAM_YPOS+(4*2),y
-  lda #15+16
-  sta OAM_XPOS+(4*0),y
-  lda #15+24
-  sta OAM_XPOS+(4*1),y
-  lda #15+32
-  sta OAM_XPOS+(4*2),y
-
-  ldx ChipsNeeded
-  lda BCD99,x
-  pha
-  .repeat 4
-    lsr
-  .endrep
-  add #$40
-  sta OAM_TILE+(4*1),y
-  pla
-  and #$0f
-  add #$40
-  sta OAM_TILE+(4*2),y
-
-; Move OAM pointer forward
-  tya
-  add #12
-  tay
-:
 
 ; Draw all hearts needed
   lda PlayerHealth
@@ -1355,8 +1316,7 @@ BalloonOffsetHi:
 DrawX = 0
 DrawY = 1
 Attrib = 2
-MiddleOffsetX = 3
-DrawX2 = 4
+DrawX2 = 3
   ; need to do this first even if we skip the drawing, because of PlayerDrawX and PlayerDrawY
   jsr MakeDrawX
   RealYPosToScreenPos PlayerPYL, PlayerPYH, DrawY
@@ -1414,46 +1374,16 @@ DrawX2 = 4
 
   ; okay now we want to actually draw the player
   lda #0
-  sta MiddleOffsetX
   sta Attrib
-  sta PlayerTiles+6
   sta PlayerAnimationFrame
 
+  ; Use a different animation frame if you're climbing a ladder
   lda PlayerOnLadder
   beq :+
-    ldy #$20
+    ldy #$08
     bne CustomFrameBase
   :
 
-  ldx PlayerTailAttack
-  beq :+
-    lda TailAttackFrame,x
-    sta PlayerAnimationFrame
-  :
-
-  lda PlayerAnimationFrame
-  beq NormalFrame
-  tay
-  lda #$0f
-  sta PlayerTiles+0
-  lda #$01
-  sta PlayerTiles+1
-  lda AnimO,y
-  ldx PlayerDir
-  beq :+
-  neg
-: sta MiddleOffsetX
-  lda Anim0,y
-  sta PlayerTiles+2
-  lda Anim1,y
-  sta PlayerTiles+3
-  lda Anim2,y
-  sta PlayerTiles+4
-  lda Anim3,y
-  sta PlayerTiles+5
-  lda Anim4,y
-  sta PlayerTiles+6
-  jmp NoSpecialAnimation
 NormalFrame:
   ldy #$00
 CustomFrameBase:
@@ -1485,16 +1415,7 @@ EndAnimationFrame:
   ; Animate swimming
   lda PlayerSwimming
   beq :+
-    lda retraces
-    lsr
-    lsr
-    lsr
-    and #1
-    tay
-    lda SwimmingFeet1,y
-    sta PlayerTiles+4
-    lda SwimmingFeet2,y
-    sta PlayerTiles+5
+    ; swimming frame
     jmp NoSpecialAnimation
   :
 
@@ -1502,31 +1423,20 @@ EndAnimationFrame:
   jne NoSpecialAnimation
   lda PlayerJumping
   beq :+
-    lda #$0c
-    sta PlayerTiles+3
-JumpingTilesForSwimming:
-    lda #$08
+    ; jumping frame
+    lda #$06
     sta PlayerTiles+4
-    lda #$09
+    lda #$07
     sta PlayerTiles+5
     jmp NoSpecialAnimation
   :
 
   lda PlayerOnGround
-  beq :+
-    lda PlayerDir
-    sta PlayerDirForScroll
-  :
-
-  lda PlayerOnGround
   bne :+
-    lda #$0d
-    sta PlayerTiles+2
-    lda #$0e
-    sta PlayerTiles+3
-    lda #$0a
+    ; falling frame
+    lda #$06
     sta PlayerTiles+4
-    lda #$0b
+    lda #$07
     sta PlayerTiles+5
     jmp NoSpecialAnimation
   :
@@ -1536,25 +1446,12 @@ JumpingTilesForSwimming:
   ora PlayerVXH
   beq :+
     lda retraces
-    lsr
-    lsr
-    and #%11
-    tay
-    lda WalkFrameMR,y
-    sta PlayerTiles+3
-    lda WalkFrameBL,y
-    sta PlayerTiles+4
-    lda WalkFrameBR,y
-    sta PlayerTiles+5
-.if 0 ; old walk animation code
-    lda retraces
     and #%100
     beq :+
       lda #$06
       sta PlayerTiles+4
       lda #$07
       sta PlayerTiles+5
-.endif
   :
 NoSpecialAnimation:
 
@@ -1572,45 +1469,6 @@ NoSpecialAnimation:
     beq DoHorizTileFlip
     bne NoHorizTileFlip 
   :
-
-; Draw balloon on top of player, if balloon is being used
-  lda PlayerHasBalloon
-  beq NoBalloon
-  ldx OamPtr
-
-  lda #$5c
-  sta OAM_TILE+(4*0),x
-  lda #$5d
-  sta OAM_TILE+(4*1),x
-  lda #OAM_COLOR_1
-  sta OAM_ATTR+(4*0),x
-  sta OAM_ATTR+(4*1),x
-
-  lda DrawX
-  sub #2
-  ldy PlayerDir
-  beq :+
-    add #4
-  :
-  sta OAM_XPOS+(4*0),x
-  sta OAM_XPOS+(4*1),x
-  lda DrawY
-  sta OAM_YPOS+(4*1),x
-  sub #8
-  sta OAM_YPOS+(4*0),x
-
-  lda #$00
-  sta PlayerTiles+0
-  lda #$1f
-  sta PlayerTiles+1
-  lda #$02
-  sta PlayerTiles+2
-  lda #$2f
-  sta PlayerTiles+3
-  txa
-  add #8
-  sta OamPtr
-NoBalloon:
 
   ; flip horizontally
   lda PlayerDir
@@ -1655,42 +1513,18 @@ PutSprite:
   add YPosList,y
   sta OAM_YPOS,x
 
-  cpy #1
-  bne :+
-    lda DrawX
-    add MiddleOffsetX
-    sta DrawX
-  :
-
   lda Attrib
   sta OAM_ATTR,x
+  ; Move to the next OAM entry
   inx
   inx
   inx
   inx
+  ; Move to the next tile in the player frame
   iny
   cpy #6
   bne PutSprite
   stx OamPtr
-
-  lda PlayerTiles+6
-  beq NoExtraTile
-  sta OAM_TILE,x
-  ldy PlayerDir
-  lda DrawX
-  add ExtraTileX,y
-  sta OAM_XPOS,x
-  lda DrawY
-  add #16
-  sta OAM_YPOS,x
-  lda Attrib
-  sta OAM_ATTR,x
-  inx
-  inx
-  inx
-  inx
-  stx OamPtr
-NoExtraTile:
 
   lda CoinShowTimer
   beq NoCoinShow
@@ -1714,7 +1548,7 @@ NoExtraTile:
     add #8
     sta OAM_XPOS+(4*3),x
 
-    lda #0
+    lda #OAM_COLOR_1
     sta OAM_ATTR+(4*0),x
     sta OAM_ATTR+(4*1),x
     sta OAM_ATTR+(4*2),x
@@ -1754,31 +1588,10 @@ NoCoinShow:
 
 XPosList: .byt 0, 8, 0, 8, 0,  8
 YPosList: .byt 0, 0, 8, 8, 16, 16
-ExtraTileX: .byt 16, <-8
-
-Anim0: .byt $02, $10, $13, $15, $19 ;$20
-Anim1: .byt $03, $11, $14, $16, $1a ;$21
-Anim2: .byt $04, $12, $12, $17, $1b ;$22
-Anim3: .byt $05, $05, $05, $18, $1c ;$23
-Anim4: .byt $00, $00, $00, $00, $1d ;$24
-AnimO: .byt   0,   0,   0,   2,   3 ;  4
-TailAttackFrame:
-  .byt 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 3, 2, 2, 1
-SwimmingFeet1: .byt $8, $a
-SwimmingFeet2: .byt $9, $b
-
-; up left and up right always $00, $01
-; middle left always $02
-WalkFrameMR: .byt $30, $31, $30, $32
-WalkFrameBL: .byt $04, $33, $35, $33
-WalkFrameBR: .byt $05, $34, $36, $37
 
 MakeDrawX:
   RealXPosToScreenPos PlayerPXL, PlayerPXH, DrawX
   rts
-; 00 01 | 0f 01 | 0f 01 | 0f 01 | 0f 01     | 0f 01
-; 02 03 | 10 11 | 13 14 | 15 16 | 19 1a     | 20 21 
-; 04 05 | 12 05 | 12 05 | 17 18 | 1b 1c 1d  | 22 23 24
 .endproc
 
 .proc DoTailAttack

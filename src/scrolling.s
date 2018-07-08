@@ -40,7 +40,6 @@ NewCameraX = Temp
   lda PlayerPXL
   sta Target+0
   lda PlayerPXH
-  ;ldy PlayerDirForScroll  ; 0 for right, 1 for left
   sub #8 ;CameraTargetByFacing,y
   bcs :+ ; <-- if it goes past zero, zero out the scroll
     lda #0

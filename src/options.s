@@ -104,7 +104,7 @@ Color3 = 12
   jsr ClearBG4kb
   lda #GraphicsUpload::CHR_FONT
   jsr DoGraphicUpload
-  jsr UploadNovaAndCommon
+  jsr UploadPlayerAndCommon
 
   jsr WaitVblank
   ; Write palette

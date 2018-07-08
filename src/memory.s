@@ -66,7 +66,6 @@
  
   PlayerWasRunning: .res 1     ; was the player running when they jumped?
   PlayerDir:        .res 1     ; currently facing left?
-  PlayerDirForScroll: .res 1   ; similar but for scrolling purposes
   PlayerJumping:    .res 1     ; true if jumping (not falling)
   PlayerOnGround:   .res 1     ; true if on ground
   PlayerJumpCancelLock: .res 1 ; timer for the player being unable to cancel a jump

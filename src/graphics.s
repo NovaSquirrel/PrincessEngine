@@ -3,7 +3,7 @@
 ; ||||++++ number of 3 entry palettes
 ; ++++---- palette to start writing to, * 4
 
-SPNova:     ChrFile "../chr/spnova.pb53",     1024, $1000 
+SPPlayer:   ChrFile "../chr/spplayer.pb53",   1024, $1000 
 SPCommon:   ChrFile "../chr/spcommon.pb53",   1024, $1400
 BGCommon:   ChrFile "../chr/bgcommon.pb53",   1024, $0000
 BGGrassy:   ChrFile "../chr/bggrassy.pb53",   768,  $0500

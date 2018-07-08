@@ -1158,8 +1158,8 @@ FromCheckpoint:
   sta PlayerVYL
   sta PlayerVYH
 
-; Decompress Nova tiles and common sprite tiles
-  jsr UploadNovaAndCommon
+; Decompress player tiles and common sprite tiles
+  jsr UploadPlayerAndCommon
 
 ; Finally decompress the level and start the game engine
   lda CheckpointLevelNumber
@@ -1174,11 +1174,11 @@ RunSpeedsR:  .byt 4*16,     3*16
 StartLevel_FromCheckpoint = StartLevel::FromCheckpoint
 
 ; Uploads graphics for Nova as well as the common sprite tiles
-.proc UploadNovaAndCommon
+.proc UploadPlayerAndCommon
   lda #GRAPHICS_BANK1
   jsr _SetPRG
-  lda #<SPNova
-  ldy #>SPNova
+  lda #<SPPlayer
+  ldy #>SPPlayer
   jsr DecompressCHR
 
   lda #<SPCommon
@@ -1186,16 +1186,17 @@ StartLevel_FromCheckpoint = StartLevel::FromCheckpoint
   jsr DecompressCHR
 
   jsr WaitVblank
-  ; Write palette for Nova and common
+  ; Write palette for player and common
+  ; (also update InitPaletteWrites)
   lda #$3f
   sta PPUADDR
   lda #$11
   sta PPUADDR
-  lda #$12
+  lda #$16
   sta PPUDATA
-  lda #$2a
+  lda #$27
   sta PPUDATA
-  lda #$30
+  lda #$37
   sta PPUDATA
 
   lda #$3f
@@ -1885,12 +1886,12 @@ Convert:
   dex
   bpl :-
 
-  ; Write Nova's palette and the default palette to the buffer
-  lda #$12
+  ; Write player's palette and the default palette to the buffer
+  lda #$16
   sta Attributes+(4*4)+1
-  lda #$2a
+  lda #$27
   sta Attributes+(4*4)+2
-  lda #$30
+  lda #$37
   sta Attributes+(4*4)+3
 
   lda #$2d
